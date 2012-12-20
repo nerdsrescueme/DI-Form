@@ -1,0 +1,24 @@
+{
+    "name": "nerdsrescueme/form",
+    "description": "Nerd Form Builder Library",
+    "minimum-stability": "dev",
+
+    "authors": [
+        {
+            "name": "Frank Bardon Jr",
+            "email": "frankbardon@gmail.com"
+        }
+    ],
+
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "Nerd\\Form\\": ""
+        }
+    },
+
+    "target-dir": "Nerd"
+}
