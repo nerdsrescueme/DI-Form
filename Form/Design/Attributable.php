@@ -157,7 +157,7 @@ trait Attributable
 			}
 		}
 
-		return ' '.trim($out);
+		return (empty($out)?'':' ').trim($out);
 	}
 
 	/**
