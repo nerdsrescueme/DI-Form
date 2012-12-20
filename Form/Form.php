@@ -69,8 +69,8 @@ class Form
 		$fields = $this->fields->findAllRecursively(
 			function($field) use ($type)
 			{
-				$class = end(explode('\\', get_class($field)));
-				return !$field->removed and $class === ucfirst($type);
+				$class = explode('\\', get_class($field));
+				return !$field->removed and end($class) === ucfirst($type);
 			},
 			function($field)
 			{

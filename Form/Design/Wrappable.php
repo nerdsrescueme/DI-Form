@@ -9,12 +9,9 @@ trait Wrappable
 
 	public function wrap($false)
 	{
-		if ($false === false)
-		{
+		if ($false === false) {
 			$this->wrap = null;
-		}
-		else
-		{
+		} else {
 			$this->wrap = func_get_args();
 		}
 
@@ -23,12 +20,9 @@ trait Wrappable
 
 	public function wrapFields($false)
 	{
-		if ($false === false)
-		{
+		if ($false === false) {
 			$this->fieldWrap = null;
-		}
-		else
-		{
+		} else {
 			$this->fieldWrap = func_get_args();
 		}
 
