@@ -1,19 +1,8 @@
 <?php
 
-/**
- * Nerd Form Fields Namespace
- *
- * The form fields namespace provides field types to Nerd's form builder classes.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form\Field;
 
 /**
- * Form Password Field Class
- *
- * @package    Nerd
- * @subpackage Form
+ * Password input field
  */
 class Password extends Input {}

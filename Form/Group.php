@@ -9,19 +9,17 @@ namespace Nerd\Form;
  * several field objects into one container. This is useful for checkbox and radio
  * groups.
  *
- * [!!] This will automatically strip wrappers from the object, as to not create an
- *      overly complex html object that needs a ton of rendering magic.
- *
- * @package    Nerd
- * @subpackage Form
+ * This will automatically strip wrappers from the object, as to not create an
+ * overly complex html object that needs a ton of rendering magic.
  */
 class Group extends Container
 {
     public $element = 'div';
 
-    public function field(Field $field, array $options = [])
+    public function addField(Field $field, array $options = [])
     {
-        $this->fields->add($field->wrap(false)->wrapField(false));
+        $field->wrap(false)->wrapField(false);
+        $this->fields->add($field);
 
         return $field;
     }
@@ -43,7 +41,7 @@ class Group extends Container
         $out .= "<{$this->element}{$this->attributes(true)}>";
 
         $this->fields->each(function($field) use (&$out) {
-            $out .= (string) $field->render().' '; // space is important for visuals?
+            $out .= (string) $field->render();
         });
 
         $out .= "</{$this->element}>";

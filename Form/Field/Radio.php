@@ -1,30 +1,17 @@
 <?php
 
-/**
- * Nerd Form Fields Namespace
- *
- * The form fields namespace provides field types to Nerd's form builder classes.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form\Field;
 
 /**
- * Form Radio Field Class
+ * Radio input field(s)
  *
- * [!!] Radios are rendered differently than other input elements. The radio
- *      is rendered *inside* of the label element to support clickable labels.
- *
- * @package    Nerd
- * @subpackage Form
+ * Radios are rendered differently than other input elements. The radio
+ * is rendered *inside* of the label element to support clickable labels.
  */
 class Radio extends Input
 {
     /**
-     * Render this element
-     *
-     * @return string Rendered checkbox
+     * {@inheritdoc}
      */
     public function render()
     {
@@ -45,7 +32,7 @@ class Radio extends Input
         $radio = "<input {$this->attributes(true)}>";
 
         if (isset($this->label)) {
-            $this->label->text  = "{$radio} {$this->label->text}";
+            $this->label->text = "{$radio}{$this->label->text}";
         }
 
         return $start.$startField

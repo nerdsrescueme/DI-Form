@@ -1,49 +1,21 @@
 <?php
 
-/**
- * Nerd Form Fields Namespace
- *
- * The form fields namespace provides field types to Nerd's form builder classes.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form\Field;
 
 /**
- * Form Textarea Class
- *
- * @package    Nerd
- * @subpackage Form
+ * Texearea input field
  */
 class Textarea extends Input
 {
     /**
-     * Extended allowed field attributes
-     *
-     * @see Nerd\Design\Attributable
-     * @var array
-     */
-    protected static $localAttributes = ['form'];
-
-    /**
-     * Attributes placeholder
-     *
-     * @var array
-     */
-    protected static $attributes;
-
-    /**
-     * Button text
-     *
      * @var string
      */
     public $text;
 
     /**
-     * Add text to this button object
+     * Add text
      *
-     * @param    string          Text to be displayed
+     * @param string $text
      * @return Button
      */
     public function text($text)
@@ -54,9 +26,7 @@ class Textarea extends Input
     }
 
     /**
-     * Render this element
-     *
-     * @return string Rendered button
+     * {@inheritdoc}
      */
     public function render()
     {

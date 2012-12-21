@@ -8,40 +8,24 @@ namespace Nerd\Form;
  * Object oriented form builder class. This class is the gateway to Nerd's form
  * building capabilities. In essence, it creates an enumerable and renderable instance
  * of a form built with various HTML classes.
- *
- * @todo  Explain more when finished
- * 
- * @package    Nerd
- * @subpackage Core
  */
 class Form
 {
 	// Traits
 	use Design\Attributable
-	  , Design\Wrappable;
+	  , Design\Wrappable
+	  , Design\Renderable;
 
 	/**
-	 * Options that should be considered an attribute. This array corresponds to the
-	 * attributes configuration file.
-	 *
-	 * @var array
-	 */
-	protected static $localAttributes = ['form'];
-
-	/**
-	 * Enumerable array of form fields (recursive)
-	 *
-	 * @var array
+	 * @var Collection
 	 */
 	public $fields;
 
 	/**
-	 * Class Cosntructor
+	 * Constructor
 	 *
-	 * Create a form and assign options/attributes to it.
-	 *
-	 * @param    array          Array of form options
-	 * @return   Form
+	 * @param array $options Attr/value pairs
+	 * @return Form
 	 */
 	public function __construct(array $options = [])
 	{
@@ -54,28 +38,23 @@ class Form
 	}
 
 	/**
-	 * Locate form elements by type of field
+	 * Locate form elements by class name of field
 	 *
-	 * ## Usage
+	 *     $form->findByType('hidden');
+	 *     $form->findByType('date');
 	 *
-	 *     $hiddenFields = $form->findByType('hidden');
-	 *     $dateFields   = $form->findByType('date');
-	 *
-	 * @param    string          Field type
-	 * @return   mixed           Field or array of fields
+	 * @param string $type Field type
+	 * @return mixed Field or array of fields
 	 */
 	public function findByType($type)
 	{
 		$fields = $this->fields->findAllRecursively(
-			function($field) use ($type)
-			{
+			function($field) use ($type) {
 				$class = explode('\\', get_class($field));
 				return !$field->removed and end($class) === ucfirst($type);
 			},
-			function($field)
-			{
-				if ($field instanceof Container)
-				{
+			function($field) {
+				if ($field instanceof Container) {
 					return $field->fields->toArray();
 				}
 			}
@@ -87,25 +66,20 @@ class Form
 	/**
 	 * Locate form elements by one of its attributes
 	 *
-	 * ## Usage
+	 *     $form->findByAttribute('value', 1);
+	 *     $form->findByAttribute('max', 3);
 	 *
-	 *     $fields      = $form->findByAttribute('value', 1);
-	 *     $smallFields = $form->findByAttribute('max', 3);
-	 *
-	 * @param    string          Field type
-	 * @return   mixed           Field or array of fields
+	 * @param string Attribute name
+	 * @return mixed Field or array of Field objects
 	 */
 	public function findByAttribute($attribute, $value)
 	{
 		$fields = $this->fields->findAllRecursively(
-			function($field) use ($attribute, $value)
-			{
+			function($field) use ($attribute, $value) {
 				return !$field->removed and isset($field->{$attribute}) and $field->{$attribute} === $value;
 			},
-			function($field)
-			{
-				if ($field instanceof Container)
-				{
+			function($field) {
+				if ($field instanceof Container) {
 					return $field->fields->toArray();
 				}
 			}
@@ -122,8 +96,6 @@ class Form
 	 * is found. The field can be appended or prepended to the form, or simply created
 	 * and not added to the form.
 	 *
-	 * ## Usage
-	 *
 	 *     $form->field('hidden', ['value' => 1]); // Append a hidden field
 	 *     $form->field('text', ['class' => 'small'], true); // Prepend a text field
 	 *
@@ -133,34 +105,21 @@ class Form
 	 * @param    array           Field options
 	 * @param    boolean|null
 	 */
-	public function field($type, array $options = [], $prepend = false)
+	public function addField($type, array $options = [], $prepend = false)
 	{
-		if (strpos($type, '\\') == false)
-		{
+		if (strpos($type, '\\') === false) {
 			$type = '\\Nerd\\Form\\Field\\'.ucfirst($type);
 		}
 
-		if (!class_exists($type))
-		{
+		if (!class_exists($type)) {
 			throw new \InvalidArgumentException("Form field type [$type] does not exist.");
 		}
 
 		$field = new $type($options);
 
-		if ($this->hasWrap())
-		{
-			$field->wrap($this->wrap[0], $this->wrap[1]);
-		}
-
-		if ($this->hasFieldWrap())
-		{
-			$field->wrapField($this->fieldWrap[0], $this->fieldWrap[1]);
-		}
-
-		if ($prepend !== null)
-		{
-			$this->fields->add($field, $prepend);
-		}
+		$this->hasWrap()      and $field->wrap($this->wrap[0], $this->wrap[1]);
+		$this->hasFieldWrap() and $field->wrapField($this->fieldWrap[0], $this->fieldWrap[1]);
+		$prepend !== null     and $this->fields->add($field, $prepend);
 
 		return $field;
 	}
@@ -175,14 +134,13 @@ class Form
 	 *
 	 * @return    Nerd\Form\Fieldset
 	 */
-	public function fieldset()
+	public function addFieldset()
 	{
 		$fields   = func_get_args();
 		$fieldset = new Fieldset();
 
-		foreach($fields as $field)
-		{
-			$fieldset->field($field);
+		foreach($fields as $field) {
+			$fieldset->addField($field);
 		}
 
 		$this->fields->add($fieldset);
@@ -198,56 +156,26 @@ class Form
 	 *
 	 * @return    Nerd\Form\Group
 	 */
-	public function group()
+	public function addGroup()
 	{
 		$fields = func_get_args();
 		$group  = new Group();
 
-		if ($this->hasWrap())
-		{
+		if ($this->hasWrap()) {
 			$group->wrap($this->wrap[0], $this->wrap[1]);
 		}
 
-		if ($this->hasFieldWrap())
-		{
+		if ($this->hasFieldWrap()) {
 			$group->wrapField($this->fieldWrap[0], $this->fieldWrap[1]);
 		}
 
-		foreach($fields as $field)
-		{
-			$group->field($field);
+		foreach($fields as $field) {
+			$group->addField($field);
 		}
 
 		$this->fields->add($group);
 
 		return $group;
-	}
-
-	/**
-	 * Add a container element to the form
-	 *
-	 * Create a container within the form. A container object is built to be
-	 * recursable by the form renderer, allowing for maximum form building flexibility.
-	 * This method optionally takes fields as arguments, adding them to the container
-	 * upon creation
-	 *
-	 * @return    Nerd\Form\Container
-	 */
-	public function container()
-	{
-		$fields    = func_get_args();
-		$start     = array_shift($fields);
-		$end       = array_shift($fields);
-		$container = new Html($start, $end);
-
-		foreach($fields as $field)
-		{
-			$container->field($field);
-		}
-
-		$this->fields->add($container);
-
-		return $container;
 	}
 
 	/**
@@ -259,14 +187,7 @@ class Form
 	{
 		$out = "<form{$this->attributes(true)}>";
 
-		$this->fields->each(function($field) use (&$out)
-		{
-			if ($field instanceof Container)
-			{
-				$out .= (string) $field->render();
-				return;
-			}
-
+		$this->fields->each(function($field) use (&$out) {
 			$out .= (string) $field->render();
 		});
 

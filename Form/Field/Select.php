@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Nerd Form Fields Namespace
- *
- * The form fields namespace provides field types to Nerd's form builder classes.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form\Field;
 
 /**
@@ -16,31 +8,11 @@ namespace Nerd\Form\Field;
  * Unlike most other form elements, the select object inherits directly from the
  * abstract Field class. This element has many special characteristics that make it
  * difficult to wrap up with other form elements, so it's treated differently.
- *
- * @package    Nerd
- * @subpackage Form
  */
 class Select extends \Nerd\Form\Field
 {
     /**
-     * Extended allowed field attributes
-     *
-     * @see Nerd\Design\Attributable
-     * @var array
-     */
-    protected static $localAttributes = ['event.form', 'form'];
-
-    /**
-     * Attributes placeholder
-     *
-     * @var array
-     */
-    protected static $attributes;
-
-    /**
-     * Render this element
-     *
-     * @return string Rendered select field
+     * {@inheritdoc}
      */
     public function render()
     {
@@ -61,6 +33,8 @@ class Select extends \Nerd\Form\Field
         $options  = (array) $this->option('options');
         $optstr   = '';
         $selected = $this->option('selected');
+
+        unset($this->options['selected']);
 
         foreach ($options as $opt => $label) {
             // Support for optgroups.

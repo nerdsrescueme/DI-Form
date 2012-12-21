@@ -1,52 +1,24 @@
 <?php
 
-/**
- * Nerd Form Fields Namespace
- *
- * The form fields namespace provides field types to Nerd's form builder classes.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form\Field;
 
 /**
- * Form Button Class
+ * Button field
  *
- * [!!] Form buttons are treated like input elements with a text property used to
- *      render the button text instead of using the value attribute.
- *
- * @package    Nerd
- * @subpackage Form
+ * Form buttons are treated like input elements with a text property used to
+ * render the button text instead of using the value attribute.
  */
 class Button extends Input
 {
     /**
-     * Extended allowed field attributes
-     *
-     * @see Nerd\Design\Attributable
-     * @var array
-     */
-    protected static $localAttributes = ['form'];
-
-    /**
-     * Attributes placeholder
-     *
-     * @var array
-     */
-    protected static $attributes;
-
-    /**
-     * Button text
-     *
      * @var string
      */
     public $text;
 
     /**
-     * Add text to this button object
+     * Add text to this button
      *
-     * @param    string          Text to be displayed
+     * @param string $text
      * @return Button
      */
     public function text($text)
@@ -57,9 +29,7 @@ class Button extends Input
     }
 
     /**
-     * Render this element
-     *
-     * @return string Rendered button
+     * {@inheritdoc}
      */
     public function render()
     {
@@ -67,6 +37,16 @@ class Button extends Input
             return '';
         }
 
-        return "<button{$this->attributes(true)}>{$this->text}</button>";
+        $start = $end = $fieldStart = $fieldEnd = '';
+
+        if ($this->hasWrap()) {
+            list($start, $end) = $this->wrap;
+        }
+
+        if ($this->hasFieldWrap()) {
+            list($fieldStart, $fieldEnd) = $this->fieldWrap;
+        }
+
+        return "$start$fieldStart<button{$this->attributes(true)}>{$this->text}</button>$fieldEnd$end";
     }
 }

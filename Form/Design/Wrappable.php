@@ -18,7 +18,7 @@ trait Wrappable
 		return $this;
 	}
 
-	public function wrapFields($false)
+	public function wrapField($false)
 	{
 		if ($false === false) {
 			$this->fieldWrap = null;

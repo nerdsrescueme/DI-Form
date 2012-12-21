@@ -1,28 +1,27 @@
 <?php
 
-/**
- * Nerd Form Fields Namespace
- *
- * The form fields namespace provides field types to Nerd's form builder classes.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form\Field;
 
 /**
- * Form Hidden Field Class
- *
- * @package    Nerd
- * @subpackage Form
+ * Hidden input field
  */
 class Hidden extends Input
 {
+	/**
+	 * Hidden fields may not have wrappers
+	 *
+	 * @return boolean Always false
+	 */
     public function hasWrap()
     {
         return false;
     }
 
+    /**
+	 * Hidden fields may not have wrappers
+	 *
+	 * @return boolean Always false
+	 */
     public function hasFieldWrap()
     {
         return false;

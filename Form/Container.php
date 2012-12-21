@@ -1,16 +1,5 @@
 <?php
 
-/**
- * Nerd Form Namespace
- *
- * The form namespace contains elements pertaining to the form builder classes. They
- * support the Form class by providing elements and extentions to the main class
- * allowing for OOP creation of HTML forms that can be altered all the way to the
- * on-demand rendering of the form.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form;
 
 /**
@@ -19,9 +8,6 @@ namespace Nerd\Form;
  * Used to create HTML form container objects. These objects allow for fields to
  * exist within "containing" form elements, be searched and rendered recursively
  * on-demand.
- *
- * @package    Nerd
- * @subpackage Form
  */
 abstract class Container extends Field
 {
@@ -30,10 +16,21 @@ abstract class Container extends Field
 
     public function __construct()
     {
-        $this->fields = new Design\Collection(func_get_args());
+        $args = func_get_args();
+
+        if (isset($args[0]) and is_string($args[0])) {
+            $this->element(array_shift($args));
+        }
+
+        $this->fields = new Design\Collection($args);
     }
 
-    public function field(Field $field, array $options = [])
+    public function element($element)
+    {
+        $this->element = $element;
+    }
+
+    public function addField(Field $field, array $options = [])
     {
         $this->fields->add($field);
 

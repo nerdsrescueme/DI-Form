@@ -14,11 +14,22 @@
         "phpunit/phpunit": "3.7.*"
     },
 
+    "require": {
+        "nerdsrescueme/core": "*"
+    },
+
     "autoload": {
         "psr-0": {
             "Nerd\\Form\\": ""
         }
     },
 
-    "target-dir": "Nerd"
+    "target-dir": "Nerd",
+
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/nerdsrescueme/DI.git"
+        }
+    ]
 }

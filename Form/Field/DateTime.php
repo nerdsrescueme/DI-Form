@@ -1,39 +1,30 @@
 <?php
 
-/**
- * Nerd Form Fields Namespace
- *
- * The form fields namespace provides field types to Nerd's form builder classes.
- *
- * @package    Nerd
- * @subpackage Form
- */
 namespace Nerd\Form\Field;
 
 /**
- * Form Datetime Field Class
+ * DateTime input field
  *
- * [!!] Datetime fields automatically convert dates into the format required by the
- *      HTML5 Datetime field specification.
- *
- * @package    Nerd
- * @subpackage Form
+ * Datetime fields automatically convert dates into the format required by the
+ * HTML5 Datetime field specification.
  */
 class DateTime extends Input
 {
     /**
-     * Option/Attribute assignment overload
+     * Overload option method
      *
-     * Extends the value property allowing for automatic conversion of dates
+     * Extends the value property allowing for automatic conversion of date
+     * formats to yyyy-mm-ddThh:mm:ss+00:00
      *
-     * @param    string          Option/Attribute to set
-     * @param    string          Value to set to this option
+     * @param string $option Option/Attribute to set
+     * @param string $value Value to set to this option
      */
     public function option($option, $value = null)
     {
-        if ($option == 'value') {
-            // For datetime inputs date must be: yyyy-mm-ddThh:mm:ss+00:00
-            $value = date('c', strtotime($value));
+        if ($option == 'value' and $value !== null) {
+            // TODO: Accomodate DateTime objects
+            $this->options['value'] = date('c', strtotime($value));
+            return $this;
         }
 
         return parent::option($option, $value);

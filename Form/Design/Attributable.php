@@ -13,21 +13,6 @@ namespace Nerd\Form\Design;
  */
 trait Attributable
 {
-	// Traits
-	use Renderable;
-
-	/**
-	 * Set a default attribute value key/pair.
-	 *
-	 * @param    string          Attribute name
-	 * @param    mixed           Attribute value
-	 * @return   boolean         Has the attribute been set?
-	 */
-	public static function defaultAttribute($attribute, $value)
-	{
-		return self::$attributeDefaults[$attribute] = $value;
-	}
-
 	/**
 	 * Options that exist on this class.
 	 *
@@ -98,18 +83,15 @@ trait Attributable
 	}
 
 	/**
-	 * Alias for setting a single option/attribute
+	 * Get all given options
 	 *
-	 * @see Nerd\Attributable::option()
-	 *
-	 * @param    string             Option or attribute name
-	 * @param    mixed|null         Option or attribute value or none
-	 * @return   mixed              If getting an option/attribute
-	 * @return   chainable          If setting an option/attribute
+	 * @return array
 	 */
-	public function attribute($attribute, $value = null)
+	public function allOptions()
 	{
-		return $this->option($attribute, $value);
+		$class = $this->option('class');
+
+		return !empty($class) ? $this->options + ['class' => $class] : $this->options;
 	}
 
 	/**
@@ -123,12 +105,6 @@ trait Attributable
 	 */
 	public function attributes($asString = false)
 	{
-		if (isset(self::$attributeDefaults)) {
-			foreach(self::$attributeDefaults as $attribute => $value) {
-				$this->{$attribute} = $value;
-			}
-		}
-
 		$attributes = $this->options;
 		$attributes['class'] = $this->option('class');
 
@@ -146,7 +122,7 @@ trait Attributable
 		$out = '';
 
 		foreach($attributes as $attribute => $value) {
-			if (empty($value)) {
+			if (empty($value) or is_array($value)) {
 				continue;
 			}
 
@@ -182,7 +158,7 @@ trait Attributable
 	 * @param    mixed           Option/attribute value
 	 * @return   chainable
 	 */
-	public function __call($method, array $params = null)
+	public function __call($method, array $params)
 	{
 		$this->option($method, array_shift($params));
 		return $this;
