@@ -29,10 +29,10 @@ class Radio extends Input
             list($startField, $endField) = $this->fieldWrap;
         }
 
-        $radio = "<input {$this->attributes(true)}>";
+        $radio = "<input{$this->attributes(true)}>";
 
         if (isset($this->label)) {
-            $this->label->text = "{$radio}{$this->label->text}";
+            $this->label->text = "{$radio} {$this->label->text}";
         }
 
         return $start.$startField

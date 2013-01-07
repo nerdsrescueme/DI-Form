@@ -34,6 +34,14 @@ class Select extends \Nerd\Form\Field
         $optstr   = '';
         $selected = $this->option('selected');
 
+        // Convert selected values to string
+        if (is_array($selected)) {
+            $selected = array_map('strval', $selected);
+        } else {
+            $selected = (string) $selected;
+        }
+
+        // Need to kill options temporarily...
         unset($this->options['selected']);
 
         foreach ($options as $opt => $label) {
@@ -44,10 +52,18 @@ class Select extends \Nerd\Form\Field
                 foreach ($label as $opt2 => $label2) {
                     $label2 = trim($label2, "'");
 
-                    if ((string) $opt2 === (string) $selected) {
-                        $optstr .= "<option value=\"$opt2\" selected>$label2</option>";
+                    if (is_array($selected)) {
+                        if (in_array(strval($opt2), $selected)) {
+                            $optstr .= "<option value=\"$opt2\" selected>$label2</option>";
+                        } else {
+                            $optstr .= "<option value=\"$opt2\">$label2</option>";
+                        }
                     } else {
-                        $optstr .= "<option value=\"$opt2\">$label2</option>";
+                        if (strval($opt2) === $selected) {
+                            $optstr .= "<option value=\"$opt2\" selected>$label2</option>";
+                        } else {
+                            $optstr .= "<option value=\"$opt2\">$label2</option>";
+                        }
                     }
                 }
 
@@ -57,18 +73,31 @@ class Select extends \Nerd\Form\Field
 
             $label = trim($label, "'");
 
-            if ((string) $opt === (string) $selected) {
-                $optstr .= "<option value=\"$opt\" selected>$label</option>";
+            if (is_array($selected)) {
+                if (in_array($opt, $selected)) {
+                    $optstr .= "<option value=\"$opt\" selected>$label</option>";
+                } else {
+                    $optstr .= "<option value=\"$opt\">$label</option>";
+                }
             } else {
-                $optstr .= "<option value=\"$opt\">$label</option>";
+                if (strval($opt) === $selected) {
+                    $optstr .= "<option value=\"$opt\" selected>$label</option>";
+                } else {
+                    $optstr .= "<option value=\"$opt\">$label</option>";
+                }
             }
         }
 
-        return $start
+        $return = $start
              . (isset($this->label) ? $this->label : '')
              . $startField
-             . "<select {$this->attributes(true)}>{$optstr}</select>"
+             . "<select{$this->attributes(true)}>{$optstr}</select>"
              . $endField
              . $end;
+
+        // Put selected values back...
+        $this->options['selected'] = $selected;
+
+        return $return;
     }
 }
