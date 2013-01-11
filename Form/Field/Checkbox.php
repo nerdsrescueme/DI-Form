@@ -31,8 +31,14 @@ class Checkbox extends Input
 
         $checkbox = "<input{$this->attributes(true)}>";
 
+        if (isset($this->label)) {
+            $text = $this->label->text;
+            $label = $this->label->render();
+            $label = str_replace($text, "{$checkbox} {$text}", $label);
+        }
+
         return $start.$startField
-             . (isset($this->label) ? "{$checkbox} {$this->label->text}" : $checkbox)
+             . (isset($this->label) ? $label : $checkbox)
              . $endField.$end;
     }
 }
