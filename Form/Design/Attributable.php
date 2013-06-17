@@ -123,7 +123,7 @@ trait Attributable
 
 		foreach($attributes as $attribute => $value) {
 			if (empty($value) or is_array($value)) {
-				if ($value === 0) {
+				if ($value === 0 or $value === "0") {
 					$out .= " $attribute=\"0\"";
 				}
 				continue;
